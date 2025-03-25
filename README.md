@@ -17,5 +17,6 @@ El objetivo de los componentes es que sea facilmente utilizable como una **etiqu
 | 🟩 | image-compare | `@ManzDev` | Hacerlo compatible no sólo con imágenes, sino también con videos u otros elementos usando slots. Utilizar range para mover. Referencia: [1](https://muffinman.io/blog/image-comparison-slider/) |
 | 🟩 | contextual-download | `@moaqz` | Un menú contextual para descargar logos de la web. Dudo que haya algo por ahí. Referencia: Hacer click en logo con botón derecho [1](https://svgl.app) |
 | 🟥 | File tree | `@kevinzunigacuellar` | Interesante. Creo que es mejorable visualmente, pero es complicado. Ya está en WC. Hay que pensarlo bien previamente y ver si podríamos aportar algo diferencial. Referencia: [1](https://starlight.astro.build/components/file-tree/) |
-| 🟩 | chained-input | `@DHardySD` | Interesante y creo que es sencillo de hacer. |
-
+| 🟩 | chained-input (OTP) | `@DHardySD`, `SupNova6` | Interesante y creo que es sencillo de hacer. Referencia: [1](https://mantine.dev/core/pin-input/) Draft: [1](https://codepen.io/manz/pen/emYWZOy) |
+| 🟧 | number-flow | `@felixicaza` | Interesante. Habría que utilizar animaciones CSS. Desconozco si sería complicado. Hay que analizarlo. Referencia: [1](https://number-flow.barvian.me/) |
+| 🟧 | menu-drawer | `@felixicaza` | Interesante. Desconozco si sería complejo. Referencia: [1](https://vaul.emilkowal.ski/) |
