@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,7 +9,71 @@
   <link rel="stylesheet" href="./index.css">
   <script type="module" src="./index.js"></script>
 </head>
+
 <body>
 
+  <div class="container">
+
+    <pixel-loader>
+      <img src="goosemanz.webp" alt="Goose Manz">
+      <canvas></canvas>
+      <div class="overlay"></div>
+    </pixel-loader>
+
+  </div>
+
+  <style>
+    pixel-loader {
+      --width: 484px;
+      --height: 727px;
+      --loading: 50%;
+      --time: 4s;
+
+      display: block;
+      width: var(--width);
+      height: var(--height);
+      margin: 1rem;
+      position: relative;
+      transition: --loading var(--time) linear;
+      overflow: hidden;
+
+      & img {
+        width: 100%;
+        height: 100%;
+      }
+
+      & canvas {
+        width: var(--width);
+        inset: 0;
+        top: var(--loading);
+        height: 35px;
+        /* background: #0000ff66; */
+        position: absolute;
+        z-index: 5;
+        translate: 0 -50%;
+      }
+
+      & .overlay {
+        width: 100%;
+        height: calc(100% - var(--loading));
+        background: #2223;
+        backdrop-filter: blur(15px);
+        position: absolute;
+        bottom: 0;
+      }
+    }
+
+    /*
+    @property --loading {
+      syntax: "<percentage>";
+      inherits: true;
+      initial-value: 0%;
+    }
+    */
+  </style>
+
+  <script type="module" src="./index.js"></script>
+
 </body>
+
 </html>
