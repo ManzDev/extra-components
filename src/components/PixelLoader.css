@@ -1,0 +1,42 @@
+:host {
+  --width: 484px;
+  --height: 727px;
+  --loading: 50%;
+  --time: 4s;
+
+  display: block;
+  width: var(--width);
+  height: var(--height);
+  margin: 1rem;
+  position: relative;
+  transition: --loading var(--time) linear;
+  overflow: hidden;
+
+  & ::slotted(img) {
+    width: 100%;
+    height: 100%;
+  }
+
+  & ::slotted(canvas) {
+    width: var(--width);
+    inset: 0;
+    top: var(--loading);
+    height: 35px;
+
+    /* background: #00f6; */
+    position: absolute;
+    z-index: 5;
+    translate: 0 -50%;
+  }
+
+  & ::slotted(.overlay) {
+    width: 100%;
+    height: calc(100% - var(--loading));
+    background: #2223;
+    backdrop-filter: blur(15px);
+    position: absolute;
+    bottom: 0;
+
+    /* mask: linear-gradient(to bottom, transparent 0, black 10px); */
+  }
+}
