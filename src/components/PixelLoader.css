@@ -1,8 +1,6 @@
 :host {
-  --width: 484px;
-  --height: 727px;
-  --loading: 50%;
-  --time: 4s;
+  --loading: -3%;
+  --time: 10s;
 
   display: block;
   width: var(--width);
@@ -20,23 +18,18 @@
   & ::slotted(canvas) {
     width: var(--width);
     inset: 0;
-    top: var(--loading);
-    height: 35px;
-
-    /* background: #00f6; */
+    height: calc(var(--height) + 10px);
     position: absolute;
     z-index: 5;
-    translate: 0 -50%;
   }
 
   & ::slotted(.overlay) {
     width: 100%;
-    height: calc(100% - var(--loading));
+    height: calc(100% - var(--loading) + 10px);
     background: #2223;
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(30px);
     position: absolute;
-    bottom: 0;
-
-    /* mask: linear-gradient(to bottom, transparent 0, black 10px); */
+    bottom: -10px;
+    mask: linear-gradient(to bottom, transparent 0, black 5px);
   }
 }

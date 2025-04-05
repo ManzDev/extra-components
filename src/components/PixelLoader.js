@@ -1,8 +1,11 @@
 import styles from "./PixelLoader.css?inline";
 import getCoords from "../modules/getCoords.js";
+import { getContextCanvasFromImage, getPixelColor } from "../modules/getPixelColor.js";
 
-const MAX_PIXELS = 1000;
+const MAX_PIXELS = 1500;
 const PIXEL_SIZE = 3;
+const COLOR_OFFSET = 100;
+const PIXEL_ZONE_HEIGHT = 5;
 
 CSS.registerProperty({
   name: "--loading",
@@ -16,6 +19,7 @@ class PixelLoader extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
     this.init();
+    this.loaded = false;
   }
 
   static get styles() {
@@ -23,6 +27,11 @@ class PixelLoader extends HTMLElement {
   }
 
   init() {
+    if (this.children[0].complete) {
+      this.loaded = true;
+      this.style.setProperty("--width", this.children[0].width + "px");
+      this.style.setProperty("--height", this.children[0].height + "px");
+    }
     this.canvas = document.createElement("canvas");
     this.overlay = document.createElement("div");
     this.overlay.classList.add("overlay");
@@ -33,43 +42,51 @@ class PixelLoader extends HTMLElement {
 
   connectedCallback() {
     this.render();
-    this.initLoader();
-    this.gameLoop();
+    this.addEventListener("click", () => {
+      this.initLoader();
+      this.gameLoop();
+      setTimeout(() => this.setLoad(110), 500);
+    });
+  }
+
+  createPixel() {
+    const percentage = parseInt(getComputedStyle(this).getPropertyValue("--loading"));
+    const value = Math.trunc(this.canvas.height * (percentage / 100));
+    const { x, y } = getCoords(this.canvas.width, PIXEL_ZONE_HEIGHT);
+    const fading = false;
+    const opacity = Math.min(0.25 + Math.random(), 1);
+    return { x, y, fading, opacity, value }
   }
 
   initLoader() {
     this.canvas.width = parseFloat(getComputedStyle(this).width);
-    this.canvas.height = 35;
+    this.canvas.height = parseFloat(getComputedStyle(this).height);
+    this.ctxImage = getContextCanvasFromImage(this.children[0]);
 
     for (let i = 0; i < MAX_PIXELS; i++) {
-      const { x, y } = getCoords(this.canvas.width);
-      const fading = false;
-      const opacity = Math.min(0.5 + Math.random(), 1);
-      this.pixels.push({ x, y, opacity });
+      const incr = Math.random() > 0.5 ? 1 : -1;
+      const { x, y, value, fading, opacity } = this.createPixel();
+      this.pixels.push({ x, y: y + value, opacity, incr });
     }
   }
 
   update() {
     this.pixels.forEach(pixel => {
       if (pixel.opacity === 0) {
-        pixel.fading = false;
-        pixel.opacity = Math.min(0.25 + Math.random(), 1);
-        const { x, y } = getCoords(this.canvas.width);
+        const { x, y, value, fading, opacity } = this.createPixel();
+        pixel.fading = fading;
+        pixel.opacity = opacity;
         pixel.x = x;
-        pixel.y = y;
+        pixel.y = y + value;
       }
 
       if (Math.random() > 0.5)
         pixel.fading = true;
 
-      if (pixel.fading && Math.random() > 0.6) {
+      if (pixel.fading && Math.random() > 0.01) {
         pixel.opacity = Math.max(0, pixel.opacity - 0.005);
-        if (Math.random() > 0.9) {
-          if (Math.random() > 0.5) {
-            pixel.y += 1;
-          } else {
-            pixel.y -= 1;
-          }
+        if (Math.random() > 0.8) {
+          pixel.y += pixel.incr;
         }
       }
     });
@@ -79,21 +96,22 @@ class PixelLoader extends HTMLElement {
     this.style.setProperty("--loading", `${percentage}%`);
   }
 
-  off() {
-    const keyframes = {
-      opacity: [1, 0]
-    };
-    const options = {
-      duration: 2000,
-      fill: "forwards"
-    };
-    this.canvas.animate(keyframes, options);
-  }
+  // off() {
+  //   const keyframes = {
+  //     opacity: [1, 0]
+  //   };
+  //   const options = {
+  //     duration: 2000,
+  //     fill: "forwards"
+  //   };
+  //   this.canvas.animate(keyframes, options);
+  // }
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.pixels.forEach(({ x, y, opacity }) => {
-      this.ctx.fillStyle = `rgb(255, 255, 255, ${opacity})`;
+      const { r, g, b } = getPixelColor(this.ctxImage, x, y);
+      this.ctx.fillStyle = `rgb(${r + COLOR_OFFSET}, ${g + COLOR_OFFSET}, ${b + COLOR_OFFSET}, ${opacity})`;
       this.ctx.fillRect(x, y, PIXEL_SIZE, PIXEL_SIZE);
     });
   }
